@@ -1,4 +1,5 @@
 import { IDataStore } from "../../datastore/types/IDataStore";
+import { showSaveFilePicker } from "file-system-access";
 
 export default async function createFileOperation() {
   const pickerOpts: SaveFilePickerOptions = {
@@ -14,7 +15,7 @@ export default async function createFileOperation() {
   };
 
   // create a new handle
-  const newHandle = await window.showSaveFilePicker(pickerOpts);
+  const newHandle = await showSaveFilePicker(pickerOpts);
 
   const newData: IDataStore = { topics: [], activities: [] };
 
