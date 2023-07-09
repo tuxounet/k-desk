@@ -4,10 +4,12 @@ import openFileOperation from "./operations/openFile";
 import createFileOperation from "./operations/createFile";
 
 export type FileContextType = {
+  readonly: boolean;
   fileHandle?: FileSystemFileHandle;
 };
 
 export const FileContext = React.createContext<FileContextType>({
+  readonly: true,
   fileHandle: undefined,
 });
 interface FileContextProviderProps {
@@ -17,7 +19,9 @@ interface FileContextProviderProps {
 export default function FileContextProvider(props: FileContextProviderProps) {
   const [error, setError] = React.useState<string>();
   const [fileHandle, setFileHandle] = React.useState<FileSystemFileHandle>();
-
+  const [readonly] = React.useState(
+    typeof window.showSaveFilePicker === "undefined"
+  );
   const onIOActionError = (e: Error) => {
     if (e.name === "AbortError") return;
     console.error(e);
@@ -31,23 +35,25 @@ export default function FileContextProvider(props: FileContextProviderProps) {
 
         {!fileHandle && (
           <div className="level-right">
-            <p className="level-item">
-              <button
-                className="button"
-                onClick={() => {
-                  createFileOperation()
-                    .then((handle) => setFileHandle(handle))
-                    .catch((e: Error) => onIOActionError(e));
-                }}
-              >
-                Nouveau
-              </button>
-            </p>
+            {!readonly && (
+              <p className="level-item">
+                <button
+                  className="button"
+                  onClick={() => {
+                    createFileOperation()
+                      .then((handle) => setFileHandle(handle))
+                      .catch((e: Error) => onIOActionError(e));
+                  }}
+                >
+                  Nouveau
+                </button>
+              </p>
+            )}
             <p className="level-item">
               <button
                 className="button is-success"
                 onClick={() => {
-                  openFileOperation()
+                  openFileOperation(readonly ? false : true)
                     .then((handle) => setFileHandle(handle))
                     .catch((e: Error) => onIOActionError(e));
                 }}
@@ -88,7 +94,7 @@ export default function FileContextProvider(props: FileContextProviderProps) {
         </article>
       )}
 
-      <FileContext.Provider value={{ fileHandle }}>
+      <FileContext.Provider value={{ fileHandle, readonly }}>
         {fileHandle && props.children}
       </FileContext.Provider>
     </>

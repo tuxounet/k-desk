@@ -1,4 +1,4 @@
-export async function verifyWritePermissionOperation(
+export async function verifyFileAccessOperation(
   fileHandle: FileSystemFileHandle,
   readwrite = false
 ) {

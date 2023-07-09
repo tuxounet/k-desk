@@ -1,6 +1,6 @@
-import { verifyWritePermissionOperation } from "./verifyFile";
+import { verifyFileAccessOperation } from "./verifyFile";
 import { showOpenFilePicker } from "file-system-access";
-export default async function openFileOperation() {
+export default async function openFileOperation(readonly: boolean) {
   const pickerOpts: OpenFilePickerOptions = {
     types: [
       {
@@ -16,8 +16,8 @@ export default async function openFileOperation() {
 
   // Open file picker and destructure the result the first handle
   const [fileHandle] = await showOpenFilePicker(pickerOpts);
-  const grant = await verifyWritePermissionOperation(fileHandle, true);
-  if (!grant) throw new Error("unauthorized to write file");
+  const grant = await verifyFileAccessOperation(fileHandle, !readonly);
+  if (!grant) throw new Error("unauthorized to access file");
 
   return fileHandle;
 }
