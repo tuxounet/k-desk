@@ -53,7 +53,7 @@ export default function FileContextProvider(props: FileContextProviderProps) {
               <button
                 className="button is-success"
                 onClick={() => {
-                  openFileOperation(readonly ? false : true)
+                  openFileOperation(readonly)
                     .then((handle) => setFileHandle(handle))
                     .catch((e: Error) => onIOActionError(e));
                 }}
