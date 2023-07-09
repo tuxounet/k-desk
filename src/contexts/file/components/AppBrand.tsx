@@ -4,7 +4,7 @@ export default function AppBrand() {
     <div className="level-left ml-2">
       <div className="level-item">
         <p className="subtitle is-5">
-          <img src={logo} />
+          <img src={logo} title="logo" />
         </p>
       </div>
       <div className="level-item">
