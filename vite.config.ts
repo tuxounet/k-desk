@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
-  base: "/k-desk",
+  base: "/k-desk/",
   plugins: [
     react(),
     VitePWA({

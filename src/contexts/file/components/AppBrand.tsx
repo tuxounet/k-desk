@@ -1,9 +1,10 @@
+import logo from "../../../assets/logo.png";
 export default function AppBrand() {
   return (
     <div className="level-left ml-2">
       <div className="level-item">
         <p className="subtitle is-5">
-          <img src="/favicon-32x32.png" />
+          <img src={logo} />
         </p>
       </div>
       <div className="level-item">
