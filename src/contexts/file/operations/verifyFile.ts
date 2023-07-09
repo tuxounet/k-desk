@@ -2,6 +2,7 @@ export async function verifyFileAccessOperation(
   fileHandle: FileSystemFileHandle,
   readwrite = false
 ) {
+  if (!readwrite) return true;
   // Check if permission was already granted. If so, return true.
   if (
     (await fileHandle.queryPermission({
