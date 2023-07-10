@@ -4,6 +4,7 @@ import { DataStoreContext } from "../../contexts/datastore";
 import TopicsCreate from "./components/TopicCreate";
 import TopicsList from "./components/TopicsList";
 import { ITopic } from "../../contexts/datastore/types/ITopic";
+import constants from "../../constants";
 
 export default function TopicsPanel() {
   const { store } = React.useContext(DataStoreContext);
@@ -25,6 +26,11 @@ export default function TopicsPanel() {
           item.description.toLowerCase().includes(filter.toLowerCase())
       );
     }
+    allTopics.sort((a, b) => {
+      if (!a.priority) a.priority = constants.topics.LOWEST_PRIORITY;
+      if (!b.priority) b.priority = constants.topics.LOWEST_PRIORITY;
+      return a.priority > b.priority ? 1 : -1;
+    });
     setTopics(allTopics);
   }, [status, store, filter]);
 

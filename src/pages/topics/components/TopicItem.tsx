@@ -31,7 +31,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
             </svg>
           </span>
           <span className="has-text-weight-bold ml-2">
-            {topic.title} - {topic.status}
+            P{topic.priority} : {topic.title} - {topic.status}
           </span>
         </a>
         <a className="card-header-icon card-toggle">
