@@ -9,13 +9,16 @@ import "./index.css";
 import FileContextProvider from "./contexts/file/index.tsx";
 import DataStoreContextProvider from "./contexts/datastore/index.tsx";
 import SPARouter from "./router.tsx";
+import ServiceWorkerContextProvider from "./contexts/serviceworker/index.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <FileContextProvider>
-      <DataStoreContextProvider>
-        <SPARouter />
-      </DataStoreContextProvider>
-    </FileContextProvider>
+    <ServiceWorkerContextProvider>
+      <FileContextProvider>
+        <DataStoreContextProvider>
+          <SPARouter />
+        </DataStoreContextProvider>
+      </FileContextProvider>
+    </ServiceWorkerContextProvider>
   </React.StrictMode>
 );
