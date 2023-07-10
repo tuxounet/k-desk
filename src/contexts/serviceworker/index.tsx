@@ -30,7 +30,7 @@ export default function ServiceWorkerContextProvider(
       {updateReady && (
         <article className="message is-success">
           <div className="message-body">
-            Une mise a jour est disponible
+            Une mise à jour est disponible
             <br />
             <a onClick={() => window.location.reload()}>Installer</a>
           </div>

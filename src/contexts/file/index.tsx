@@ -31,7 +31,7 @@ export default function FileContextProvider(props: FileContextProviderProps) {
   return (
     <>
       <nav className="level is-mobile">
-        <AppBrand />
+        <AppBrand filename={fileHandle?.name} />
 
         {!fileHandle && (
           <div className="level-right">
