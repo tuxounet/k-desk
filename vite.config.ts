@@ -16,7 +16,7 @@ export default defineConfig({
         short_name: "k-desk",
         description: "Krux Desk Management System App",
         theme_color: "#ffffff",
-        start_url: "/",
+        start_url: "/k-desk/",
         icons: [
           {
             src: "/k-desk/android-chrome-36x36.png",
