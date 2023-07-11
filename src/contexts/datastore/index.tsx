@@ -2,7 +2,7 @@ import React from "react";
 
 import { FileContext } from "../file";
 import loadStoreOperation from "./operations/loadStore";
-import { IDataStore } from "./types/IDataStore";
+import { IDataStore, defaultDataStore } from "./types/IDataStore";
 import saveStoreOperation from "./operations/saveStore";
 
 export type DataStoreContextType = {
@@ -12,10 +12,7 @@ export type DataStoreContextType = {
 };
 
 export const DataStoreContext = React.createContext<DataStoreContextType>({
-  store: {
-    topics: [],
-    activities: [],
-  },
+  store: defaultDataStore,
   reload: () => Promise.resolve(false),
   save: () => Promise.resolve(false),
 });
@@ -30,10 +27,7 @@ export default function DataStoreContextProvider(
   const { fileHandle } = React.useContext(FileContext);
   const [ready, setReady] = React.useState(false);
   const [error, setError] = React.useState<string>();
-  const [store, setStore] = React.useState<IDataStore>({
-    topics: [],
-    activities: [],
-  });
+  const [store, setStore] = React.useState<IDataStore>(defaultDataStore);
   React.useEffect(() => {
     if (!fileHandle) return;
     reloadStore().catch((e: Error) => {

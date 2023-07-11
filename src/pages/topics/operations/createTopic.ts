@@ -11,13 +11,14 @@ export default async function createTopicOperation(
     ...storeContext.store,
   };
 
-  const found = newStore.topics.find(
+  const found = newStore.topics.items.find(
     (item) =>
       item.title.toLowerCase().trim() === newTopic.title.toLowerCase().trim()
   );
   if (found) {
     throw new Error("un topic avec le même nom est déjà présent");
   }
-  newStore.topics.push(newTopic);
+  newStore.topics.items.push(newTopic);
+  newStore.topics.lastSequence = newTopic.sequence;
   return await storeContext.save(newStore);
 }

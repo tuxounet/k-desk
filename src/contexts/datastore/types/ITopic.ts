@@ -1,13 +1,12 @@
 export interface ITopic {
   id: string;
+  sequence: number;
   title: string;
   description: string;
-  status: string;
-  ended: boolean;
+  status: TopicStatus;
   createdAt: Date;
   updatedAt: Date;
   events: ITopicEvent[];
-  priority: number;
 }
 
 export interface ITopicEvent {
@@ -15,3 +14,5 @@ export interface ITopicEvent {
   label: string;
   date: Date;
 }
+
+export type TopicStatus = "ACTIVE" | "PENDING" | "COMPLETED";

@@ -1,5 +1,13 @@
 import React from "react";
-import { ITopic } from "../../../contexts/datastore/types/ITopic";
+import { ITopic, TopicStatus } from "../../../contexts/datastore/types/ITopic";
+import changeTopicStatusOperation from "../operations/changeTopicStatus";
+import {
+  DataStoreContext,
+  DataStoreContextType,
+} from "../../../contexts/datastore";
+import TopicStatusText from "./TopicStatusText";
+import moment from "moment";
+import "moment/locale/fr";
 
 interface TopicItemProps {
   topic: ITopic;
@@ -7,6 +15,13 @@ interface TopicItemProps {
 
 export default function TopicItem({ topic }: TopicItemProps) {
   const [expanded, setIsExpanded] = React.useState(false);
+  const storeContext = React.useContext(
+    DataStoreContext
+  ) as DataStoreContextType;
+
+  const onChangeStatus = (newStatus: TopicStatus) => {
+    changeTopicStatusOperation(topic, newStatus, storeContext);
+  };
   return (
     <div className="card is-fullwidth">
       <header className="card-header">
@@ -31,7 +46,8 @@ export default function TopicItem({ topic }: TopicItemProps) {
             </svg>
           </span>
           <span className="has-text-weight-bold ml-2">
-            P{topic.priority} : {topic.title} - {topic.status}
+            #{topic.sequence} {topic.title} (
+            <TopicStatusText status={topic.status} />)
           </span>
         </a>
         <a className="card-header-icon card-toggle">
@@ -74,20 +90,116 @@ export default function TopicItem({ topic }: TopicItemProps) {
         </a>
       </header>
       <div className={`card-content ${!expanded ? "is-hidden" : ""}`}>
-        <div className="content">
-          Content goes here <small>Small text</small>
+        <p>
+          Description: {topic.description}
+          <hr />
+          Crée le: {moment(topic.createdAt).locale("fr").calendar()}
+          <br />
+          Dernière mise à jour:{" "}
+          {moment(topic.createdAt).locale("fr").calendar()}
+          <br />
+          Durée : {moment(topic.createdAt).diff(topic.updatedAt, "day")}j
+        </p>
+
+        <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
+          Activités
         </div>
+
+        <div className="panel-block is-active">
+          <span className="panel-icon">
+            <i className="fas fa-book" aria-hidden="true"></i>
+          </span>
+          bulma
+        </div>
+        <a className="panel-block">
+          <span className="panel-icon">
+            <i className="fas fa-book" aria-hidden="true"></i>
+          </span>
+          marksheet
+        </a>
+        <a className="panel-block">
+          <span className="panel-icon">
+            <i className="fas fa-book" aria-hidden="true"></i>
+          </span>
+          minireset.css
+        </a>
+        <a className="panel-block">
+          <span className="panel-icon">
+            <i className="fas fa-book" aria-hidden="true"></i>
+          </span>
+          jgthms.github.io
+        </a>
+        <a className="panel-block">
+          <span className="panel-icon">
+            <i className="fas fa-code-branch" aria-hidden="true"></i>
+          </span>
+          daniellowtw/infboard
+        </a>
+        <a className="panel-block">
+          <span className="panel-icon">
+            <i className="fas fa-code-branch" aria-hidden="true"></i>
+          </span>
+          mojs
+        </a>
+
+        <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
+          Historique
+        </div>
+
+        {topic.events.map((item) => (
+          <div key={item.date.toString()} className="panel-block">
+            <span className="panel-icon">
+              <i className="fas fa-book" aria-hidden="true"></i>
+            </span>
+            {moment(item.date).locale("fr").calendar()} {item.label}
+          </div>
+        ))}
       </div>
       <footer className={`card-footer ${!expanded ? "is-hidden" : ""}`}>
-        <a href="#" className="card-footer-item">
-          Save
-        </a>
-        <a href="#" className="card-footer-item">
-          Edit
-        </a>
-        <a href="#" className="card-footer-item">
-          Delete
-        </a>
+        {topic.status !== "COMPLETED" && (
+          <>
+            {topic.status === "ACTIVE" && (
+              <a
+                className="card-footer-item"
+                onClick={() => {
+                  onChangeStatus("PENDING");
+                }}
+              >
+                Suspendre
+              </a>
+            )}
+            {topic.status === "PENDING" && (
+              <a
+                className="card-footer-item"
+                onClick={() => {
+                  onChangeStatus("ACTIVE");
+                }}
+              >
+                Reprendre
+              </a>
+            )}
+            <a
+              className="card-footer-item"
+              onClick={() => {
+                onChangeStatus("COMPLETED");
+              }}
+            >
+              Terminer
+            </a>
+          </>
+        )}
+        {topic.status === "COMPLETED" && (
+          <>
+            <a
+              className="card-footer-item"
+              onClick={() => {
+                onChangeStatus("ACTIVE");
+              }}
+            >
+              Réactiver
+            </a>
+          </>
+        )}
       </footer>
     </div>
   );

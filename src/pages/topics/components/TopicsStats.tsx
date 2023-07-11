@@ -13,12 +13,16 @@ export default function TopicsStats(props: DataStoreStatsProps) {
   const [completed, setCompleted] = React.useState(0);
 
   React.useEffect(() => {
-    setAll(props.store.topics.length);
+    setAll(props.store.topics.items.length);
     setCompleted(
-      props.store.topics.filter((p) => p.status === "COMPLETED").length
+      props.store.topics.items.filter((p) => p.status === "COMPLETED").length
     );
-    setActive(props.store.topics.filter((p) => p.status === "ACTIVE").length);
-    setPending(props.store.topics.filter((p) => p.status === "PENDING").length);
+    setActive(
+      props.store.topics.items.filter((p) => p.status === "ACTIVE").length
+    );
+    setPending(
+      props.store.topics.items.filter((p) => p.status === "PENDING").length
+    );
   }, [props.store]);
 
   return (
@@ -42,6 +46,7 @@ export default function TopicsStats(props: DataStoreStatsProps) {
           <p className="title">{completed}</p>
         </div>
       </div>
+
       <div className="level-item has-text-centered">
         <div>
           <p className="heading">Tous</p>

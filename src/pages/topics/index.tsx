@@ -3,20 +3,19 @@ import TopicsStats from "./components/TopicsStats";
 import { DataStoreContext } from "../../contexts/datastore";
 import TopicsCreate from "./components/TopicCreate";
 import TopicsList from "./components/TopicsList";
-import { ITopic } from "../../contexts/datastore/types/ITopic";
-import constants from "../../constants";
+import { ITopic, TopicStatus } from "../../contexts/datastore/types/ITopic";
 
 export default function TopicsPanel() {
   const { store } = React.useContext(DataStoreContext);
   const [filter, setFilter] = React.useState<string>();
-  const [status, setStatus] = React.useState<string>();
+  const [status, setStatus] = React.useState<TopicStatus | undefined>("ACTIVE");
   const [topics, setTopics] = React.useState<ITopic[]>([]);
   React.useEffect(() => {
     let allTopics: ITopic[] = [];
     if (!status) {
-      allTopics = store.topics;
+      allTopics = store.topics.items;
     } else {
-      allTopics = store.topics.filter((item) => item.status === status);
+      allTopics = store.topics.items.filter((item) => item.status === status);
     }
 
     if (filter) {
@@ -27,9 +26,7 @@ export default function TopicsPanel() {
       );
     }
     allTopics.sort((a, b) => {
-      if (!a.priority) a.priority = constants.topics.LOWEST_PRIORITY;
-      if (!b.priority) b.priority = constants.topics.LOWEST_PRIORITY;
-      return a.priority > b.priority ? 1 : -1;
+      return a.sequence > b.sequence ? 1 : -1;
     });
     setTopics(allTopics);
   }, [status, store, filter]);
@@ -40,12 +37,6 @@ export default function TopicsPanel() {
       <TopicsStats store={store} />
       <TopicsCreate />
       <p className="panel-tabs">
-        <a
-          className={status === undefined ? "is-active" : ""}
-          onClick={() => setStatus(undefined)}
-        >
-          Tous
-        </a>
         <a
           className={status === "ACTIVE" ? "is-active" : ""}
           onClick={() => setStatus("ACTIVE")}
@@ -63,6 +54,13 @@ export default function TopicsPanel() {
           onClick={() => setStatus("COMPLETED")}
         >
           Terminés
+        </a>
+
+        <a
+          className={status === undefined ? "is-active" : ""}
+          onClick={() => setStatus(undefined)}
+        >
+          Tous
         </a>
       </p>
       <div className="panel-block">

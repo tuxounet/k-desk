@@ -4,13 +4,12 @@ import { ITopic } from "../../../contexts/datastore/types/ITopic";
 import { DataStoreContext } from "../../../contexts/datastore";
 import { v4 } from "uuid";
 import { FileContext } from "../../../contexts/file";
-import constants from "../../../constants";
 export default function TopicsCreate() {
   const [error, setError] = React.useState<string>();
   const [isActive, setIsActive] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [priority, setPriority] = React.useState(constants.topics.LOWEST_PRIORITY);
+
   const storeContext = React.useContext(DataStoreContext);
   const { readonly } = React.useContext(FileContext);
 
@@ -28,14 +27,13 @@ export default function TopicsCreate() {
     setError(undefined);
     const newTopic: ITopic = {
       id: v4(),
+      sequence: storeContext.store.topics.lastSequence + 1,
       createdAt: new Date(),
       updatedAt: new Date(),
-      ended: false,
       status: "ACTIVE",
       events: [],
       title,
       description,
-      priority,
     };
     createTopicOperation(newTopic, storeContext)
       .then(() => {
@@ -124,21 +122,7 @@ export default function TopicsCreate() {
                       ></textarea>
                     </div>
                   </div>
-                  <div className="field">
-                    <label className="label">Priorité</label>
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="number"
-                        required
-                        name="priority"
-                        value={priority}
-                        min={constants.topics.HIGHEST_PRIORITY}
-                        max={constants.topics.LOWEST_PRIORITY}
-                        onChange={(e) => setPriority(parseInt(e.target.value))}
-                      />
-                    </div>
-                  </div>
+
                   {error && (
                     <article className="message is-danger">
                       <div className="message-header">

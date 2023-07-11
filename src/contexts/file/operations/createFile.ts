@@ -1,4 +1,4 @@
-import { IDataStore } from "../../datastore/types/IDataStore";
+import { IDataStore, defaultDataStore } from "../../datastore/types/IDataStore";
 import { showSaveFilePicker } from "file-system-access";
 
 export default async function createFileOperation() {
@@ -17,7 +17,7 @@ export default async function createFileOperation() {
   // create a new handle
   const newHandle = await showSaveFilePicker(pickerOpts);
 
-  const newData: IDataStore = { topics: [], activities: [] };
+  const newData: IDataStore = defaultDataStore;
 
   // create a FileSystemWritableFileStream to write to
   const writableStream = await newHandle.createWritable();
