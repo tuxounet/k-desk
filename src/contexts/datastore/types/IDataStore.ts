@@ -7,10 +7,8 @@ export interface IDataStore {
     items: ITopic[];
   };
   activities: {
-    activities: {
-      lastSequence: number;
-      items: IActivity[];
-    };
+    lastSequence: number;
+    items: IActivity[];
   };
 }
 
@@ -20,9 +18,7 @@ export const defaultDataStore: IDataStore = {
     items: [],
   },
   activities: {
-    activities: {
-      lastSequence: 0,
-      items: [],
-    },
+    lastSequence: 0,
+    items: [],
   },
 };

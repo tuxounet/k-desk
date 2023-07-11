@@ -13,9 +13,11 @@ export default function TopicsPanel() {
   React.useEffect(() => {
     let allTopics: ITopic[] = [];
     if (!status) {
-      allTopics = store.topics.items;
+      allTopics = store.topics.items || [];
     } else {
-      allTopics = store.topics.items.filter((item) => item.status === status);
+      allTopics = (store.topics.items || []).filter(
+        (item) => item.status === status
+      );
     }
 
     if (filter) {

@@ -90,9 +90,9 @@ export default function TopicItem({ topic }: TopicItemProps) {
         </a>
       </header>
       <div className={`card-content ${!expanded ? "is-hidden" : ""}`}>
+        <p>Description: {topic.description}</p>
+        <hr />
         <p>
-          Description: {topic.description}
-          <hr />
           Crée le: {moment(topic.createdAt).locale("fr").calendar()}
           <br />
           Dernière mise à jour:{" "}
@@ -100,7 +100,6 @@ export default function TopicItem({ topic }: TopicItemProps) {
           <br />
           Durée : {moment(topic.createdAt).diff(topic.updatedAt, "day")}j
         </p>
-
         <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
           Activités
         </div>

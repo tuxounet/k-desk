@@ -1,4 +1,21 @@
+import React from "react";
+import ActivitiesList from "./components/ActivityList";
+import { IActivity } from "../../contexts/datastore/types/IActivity";
+import { DataStoreContext } from "../../contexts/datastore";
+
 export default function ActivitiesPanel() {
+  const { store } = React.useContext(DataStoreContext);
+  const [activites, setActiities] = React.useState<IActivity[]>([]);
+  React.useEffect(() => {
+    let allActivities: IActivity[] = [];
+
+    allActivities = store.activities.items || [];
+
+    allActivities.sort((a, b) => {
+      return a.sequence > b.sequence ? 1 : -1;
+    });
+    setActiities(allActivities);
+  }, [store]);
   return (
     <>
       <p className="panel-heading">Activités</p>
@@ -24,48 +41,7 @@ export default function ActivitiesPanel() {
         </p>
       </div>
 
-      <a className="panel-block is-active">
-        <span className="panel-icon">
-          <i className="fas fa-book" aria-hidden="true"></i>
-        </span>
-        bulma
-      </a>
-      <a className="panel-block">
-        <span className="panel-icon">
-          <i className="fas fa-book" aria-hidden="true"></i>
-        </span>
-        marksheet
-      </a>
-      <a className="panel-block">
-        <span className="panel-icon">
-          <i className="fas fa-book" aria-hidden="true"></i>
-        </span>
-        minireset.css
-      </a>
-      <a className="panel-block">
-        <span className="panel-icon">
-          <i className="fas fa-book" aria-hidden="true"></i>
-        </span>
-        jgthms.github.io
-      </a>
-      <a className="panel-block">
-        <span className="panel-icon">
-          <i className="fas fa-code-branch" aria-hidden="true"></i>
-        </span>
-        daniellowtw/infboard
-      </a>
-      <a className="panel-block">
-        <span className="panel-icon">
-          <i className="fas fa-code-branch" aria-hidden="true"></i>
-        </span>
-        mojs
-      </a>
-
-      <div className="panel-block">
-        <button className="button is-link is-outlined is-fullwidth">
-          Reset all filters
-        </button>
-      </div>
+      <ActivitiesList activities={activites} />
     </>
   );
 }
