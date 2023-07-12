@@ -29,16 +29,18 @@ export default function TopicDetailView({ item }: TopicDetailViewProps) {
 
   return (
     <>
-      <p className="panel-heading">
-        Sujet #{item}{" "}
-        <button
-          onClick={() => {
-            setData(undefined);
-          }}
-        >
-          X
-        </button>
-      </p>
+      {topic && (
+        <p className="panel-heading">
+          Sujet #{topic.sequence}
+          <button
+            onClick={() => {
+              setData(undefined);
+            }}
+          >
+            X
+          </button>
+        </p>
+      )}
     </>
   );
 }
