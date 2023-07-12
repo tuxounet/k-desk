@@ -5,16 +5,25 @@ import { DataStoreContext } from "../../../contexts/datastore";
 import { FileContext } from "../../../contexts/file";
 import { IElement } from "../../../contexts/datastore/types/IElement";
 import createElementOperation from "../operations/createElement";
-import ensureTopicOperation from "../../topics/operations/ensureTopic";
+import getTopicOperation from "../../topics/operations/getTopic";
+import { ITopic } from "../../../contexts/datastore/types/ITopic";
 export default function ElementCreate() {
   const [error, setError] = React.useState<string>();
   const [isActive, setIsActive] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [detail, setDetail] = React.useState("");
-
+  const [topic, setTopic] = React.useState<number>();
   const storeContext = React.useContext(DataStoreContext);
   const { readonly } = React.useContext(FileContext);
 
+  React.useEffect(() => {
+    if (!isActive) return;
+
+    const inboxTopic = storeContext.store.topics.items.find((item) => {
+      item.title === "inbox";
+    });
+    if (inboxTopic) setTopic(inboxTopic.sequence);
+  }, [isActive]);
   const openModal = () => {
     setIsActive(true);
   };
@@ -25,30 +34,32 @@ export default function ElementCreate() {
     setIsActive(false);
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     setError(undefined);
+    try {
+      console.dir(topic);
+      let targetTopic: ITopic | undefined;
+      if (topic) {
+        targetTopic = await getTopicOperation(topic, storeContext);
+      } else
+        targetTopic = storeContext.store.topics.items.find((item) => {
+          item.title === "inbox";
+        });
+      const newElement: IElement = {
+        sequence: storeContext.store.elements.lastSequence + 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        topic: targetTopic?.sequence ?? 1,
+        title,
+        detail,
+      };
+      await createElementOperation(newElement, storeContext);
 
-    const topicName = "inbox";
-
-    ensureTopicOperation(topicName, storeContext)
-      .then((topic) => {
-        const newElement: IElement = {
-          sequence: storeContext.store.elements.lastSequence + 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          topic: topic.sequence,
-          title,
-          detail,
-        };
-        return createElementOperation(newElement, storeContext);
-      })
-      .then(() => {
-        closeModal();
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        setError(e.name + "-" + e.message);
-      });
+      closeModal();
+    } catch (e: any) {
+      console.error(e);
+      setError(e.name + "-" + e.message);
+    }
   };
 
   return (
@@ -129,7 +140,23 @@ export default function ElementCreate() {
                       ></textarea>
                     </div>
                   </div>
-
+                  <div className="field">
+                    <label className="label">Sujet</label>
+                    <div className="control">
+                      <div className="select">
+                        <select
+                          value={topic}
+                          onChange={(e) => setTopic(parseInt(e.target.value))}
+                        >
+                          {storeContext.store.topics.items.map((item) => (
+                            <option key={item.sequence} value={item.sequence}>
+                              {item.title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   {error && (
                     <article className="message is-danger">
                       <div className="message-header">

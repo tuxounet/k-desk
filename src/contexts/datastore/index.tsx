@@ -35,7 +35,7 @@ export default function DataStoreContextProvider(
     });
   }, [fileHandle]);
 
-  const reloadStore = () => {
+  const reloadStore = async () => {
     if (!fileHandle) {
       setError("handle not found");
 
@@ -43,18 +43,18 @@ export default function DataStoreContextProvider(
       return Promise.resolve(false);
     }
     setError(undefined);
-    return loadStoreOperation(fileHandle)
-      .then((store) => {
-        setStore(store);
-        setReady(true);
-        return true;
-      })
-      .catch((e: Error) => {
-        setReady(false);
-        setError(e.name + " - " + e.message);
-        console.error(e);
-        return false;
-      });
+    try {
+      const store = await loadStoreOperation(fileHandle);
+      
+      setStore(store);
+      setReady(true);
+      return true;
+    } catch (e: any) {
+      setReady(false);
+      setError(e.name + " - " + e.message);
+      console.error(e);
+      return false;
+    }
   };
 
   const saveStore = (updatedStore: IDataStore) => {

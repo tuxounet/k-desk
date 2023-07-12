@@ -8,6 +8,7 @@ import {
 import TopicStatusText from "./TopicStatusText";
 import moment from "moment";
 import "moment/locale/fr";
+import { KindContext } from "../../../contexts/kinds";
 
 interface TopicItemProps {
   topic: ITopic;
@@ -18,7 +19,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
   const storeContext = React.useContext(
     DataStoreContext
   ) as DataStoreContextType;
-
+  const { setCurrent, setData } = React.useContext(KindContext);
   const onChangeStatus = (newStatus: TopicStatus) => {
     changeTopicStatusOperation(topic, newStatus, storeContext);
   };
@@ -103,7 +104,14 @@ export default function TopicItem({ topic }: TopicItemProps) {
         </div>
 
         {topic.elements.map((item) => (
-          <a className="panel-block is-active" key={`#${item}`}>
+          <a
+            className="panel-block is-active"
+            key={`#${item}`}
+            onClick={() => {
+              setData(item);
+              setCurrent("elements");
+            }}
+          >
             <span className="panel-icon">
               <i className="fas fa-book" aria-hidden="true"></i>
             </span>

@@ -4,7 +4,11 @@ import { IElement } from "../../contexts/datastore/types/IElement";
 import ElementList from "./components/ElementList";
 import ElementCreate from "./components/ElementCreate";
 
-export default function ElementsPanel() {
+interface ElementsPanelProps {
+  item?: number;
+}
+
+export default function ElementsPanel({ item }: ElementsPanelProps) {
   const { store } = React.useContext(DataStoreContext);
   const [elements, setElements] = React.useState<IElement[]>([]);
   React.useEffect(() => {
@@ -41,8 +45,8 @@ export default function ElementsPanel() {
           </span>
         </p>
       </div>
-<ElementCreate />
-      <ElementList elements={elements} />
+      <ElementCreate />
+      <ElementList elements={elements} selected={item} />
     </>
   );
 }
