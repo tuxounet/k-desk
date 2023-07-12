@@ -97,60 +97,31 @@ export default function TopicItem({ topic }: TopicItemProps) {
           <br />
           Dernière mise à jour:{" "}
           {moment(topic.createdAt).locale("fr").calendar()}
-          <br />
-          Durée : {moment(topic.createdAt).diff(topic.updatedAt, "day")}j
         </p>
         <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
-          Activités
+          Eléments
         </div>
 
-        <div className="panel-block is-active">
-          <span className="panel-icon">
-            <i className="fas fa-book" aria-hidden="true"></i>
-          </span>
-          bulma
-        </div>
-        <a className="panel-block">
-          <span className="panel-icon">
-            <i className="fas fa-book" aria-hidden="true"></i>
-          </span>
-          marksheet
-        </a>
-        <a className="panel-block">
-          <span className="panel-icon">
-            <i className="fas fa-book" aria-hidden="true"></i>
-          </span>
-          minireset.css
-        </a>
-        <a className="panel-block">
-          <span className="panel-icon">
-            <i className="fas fa-book" aria-hidden="true"></i>
-          </span>
-          jgthms.github.io
-        </a>
-        <a className="panel-block">
-          <span className="panel-icon">
-            <i className="fas fa-code-branch" aria-hidden="true"></i>
-          </span>
-          daniellowtw/infboard
-        </a>
-        <a className="panel-block">
-          <span className="panel-icon">
-            <i className="fas fa-code-branch" aria-hidden="true"></i>
-          </span>
-          mojs
-        </a>
+        {topic.elements.map((item) => (
+          <a className="panel-block is-active" key={`#${item}`}>
+            <span className="panel-icon">
+              <i className="fas fa-book" aria-hidden="true"></i>
+            </span>
+            #{item}
+          </a>
+        ))}
 
         <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
           Historique
         </div>
 
         {topic.events.map((item) => (
-          <div key={item.date.toString()} className="panel-block">
+          <div key={item.sequence} className="panel-block">
             <span className="panel-icon">
               <i className="fas fa-book" aria-hidden="true"></i>
             </span>
-            {moment(item.date).locale("fr").calendar()} {item.label}
+            #{item.sequence} {moment(item.date).locale("fr").calendar()}{" "}
+            {item.label}
           </div>
         ))}
       </div>

@@ -1,10 +1,15 @@
 import { IActivity } from "./IActivity";
+import { IElement } from "./IElement";
 import { ITopic } from "./ITopic";
 
 export interface IDataStore {
   topics: {
     lastSequence: number;
     items: ITopic[];
+  };
+  elements: {
+    lastSequence: number;
+    items: IElement[];
   };
   activities: {
     lastSequence: number;
@@ -18,6 +23,10 @@ export const defaultDataStore: IDataStore = {
     items: [],
   },
   activities: {
+    lastSequence: 0,
+    items: [],
+  },
+  elements: {
     lastSequence: 0,
     items: [],
   },

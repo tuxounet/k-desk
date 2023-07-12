@@ -8,7 +8,7 @@ export default function TopicsList({ topics }: TopicsListProps) {
   return (
     <>
       {topics.map((item) => (
-        <TopicItem topic={item} key={item.id} />
+        <TopicItem topic={item} key={item.sequence} />
       ))}
     </>
   );

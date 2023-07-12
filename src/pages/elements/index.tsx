@@ -1,24 +1,25 @@
 import React from "react";
-import ActivitiesList from "./components/ActivityList";
-import { IActivity } from "../../contexts/datastore/types/IActivity";
 import { DataStoreContext } from "../../contexts/datastore";
+import { IElement } from "../../contexts/datastore/types/IElement";
+import ElementList from "./components/ElementList";
+import ElementCreate from "./components/ElementCreate";
 
-export default function ActivitiesPanel() {
+export default function ElementsPanel() {
   const { store } = React.useContext(DataStoreContext);
-  const [activites, setActiities] = React.useState<IActivity[]>([]);
+  const [elements, setElements] = React.useState<IElement[]>([]);
   React.useEffect(() => {
-    let allActivities: IActivity[] = [];
+    let allElements: IElement[] = [];
 
-    allActivities = store.activities.items || [];
+    allElements = store.elements.items || [];
 
-    allActivities.sort((a, b) => {
+    allElements.sort((a, b) => {
       return a.sequence > b.sequence ? 1 : -1;
     });
-    setActiities(allActivities);
+    setElements(allElements);
   }, [store]);
   return (
     <>
-      <p className="panel-heading">Activités</p>
+      <p className="panel-heading">Eléments</p>
       <div className="panel-block">
         <p className="control has-icons-left">
           <input className="input" type="text" placeholder="Search" />
@@ -40,8 +41,8 @@ export default function ActivitiesPanel() {
           </span>
         </p>
       </div>
-
-      <ActivitiesList activities={activites} />
+<ElementCreate />
+      <ElementList elements={elements} />
     </>
   );
 }

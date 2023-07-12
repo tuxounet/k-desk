@@ -2,13 +2,14 @@ import React from "react";
 
 import moment from "moment";
 import "moment/locale/fr";
-import { IActivity } from "../../../contexts/datastore/types/IActivity";
 
-interface ActivityListItemProps {
-  activity: IActivity;
+import { IElement } from "../../../contexts/datastore/types/IElement";
+
+interface ElementListItemProps {
+  element: IElement;
 }
 
-export default function ActivityListItem({ activity }: ActivityListItemProps) {
+export default function ElementListItem({ element }: ElementListItemProps) {
   const [expanded, setIsExpanded] = React.useState(false);
 
   return (
@@ -30,12 +31,12 @@ export default function ActivityListItem({ activity }: ActivityListItemProps) {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
+                d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
           </span>
           <span className="has-text-weight-bold ml-2">
-            #{activity.sequence} {activity.title}
+            #{element.sequence} {element.title}
           </span>
         </a>
         <a className="card-header-icon card-toggle">
@@ -78,27 +79,15 @@ export default function ActivityListItem({ activity }: ActivityListItemProps) {
         </a>
       </header>
       <div className={`card-content ${!expanded ? "is-hidden" : ""}`}>
+        <pre>{element.detail}</pre>
         <p>
-          Crée le: {moment(activity.createdAt).locale("fr").calendar()}
+          Sujet #{element.topic}
+          <br />
+          Crée le: {moment(element.createdAt).locale("fr").calendar()}
           <br />
           Dernière mise à jour:{" "}
-          {moment(activity.createdAt).locale("fr").calendar()}
-          <br />
-          Durée : {moment(activity.createdAt).diff(activity.updatedAt, "day")}j
+          {moment(element.createdAt).locale("fr").calendar()}
         </p>
-
-        <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
-          Historique
-        </div>
-
-        {activity.events.map((item) => (
-          <div key={item.date.toString()} className="panel-block">
-            <span className="panel-icon">
-              <i className="fas fa-book" aria-hidden="true"></i>
-            </span>
-            {moment(item.date).locale("fr").calendar()} {item.label}
-          </div>
-        ))}
       </div>
     </div>
   );

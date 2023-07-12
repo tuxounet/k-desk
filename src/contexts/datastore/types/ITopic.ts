@@ -1,5 +1,4 @@
 export interface ITopic {
-  id: string;
   sequence: number;
   title: string;
   description: string;
@@ -7,9 +6,12 @@ export interface ITopic {
   createdAt: Date;
   updatedAt: Date;
   events: ITopicEvent[];
+  lastEventsSequence: number;
+  elements: number[];
 }
 
 export interface ITopicEvent {
+  sequence: number;
   event: string;
   label: string;
   date: Date;

@@ -1,13 +1,16 @@
 import React from "react";
-import createTopicOperation from "../operations/createTopic";
-import { ITopic } from "../../../contexts/datastore/types/ITopic";
+
 import { DataStoreContext } from "../../../contexts/datastore";
+
 import { FileContext } from "../../../contexts/file";
-export default function TopicsCreate() {
+import { IElement } from "../../../contexts/datastore/types/IElement";
+import createElementOperation from "../operations/createElement";
+import ensureTopicOperation from "../../topics/operations/ensureTopic";
+export default function ElementCreate() {
   const [error, setError] = React.useState<string>();
   const [isActive, setIsActive] = React.useState(false);
   const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
+  const [detail, setDetail] = React.useState("");
 
   const storeContext = React.useContext(DataStoreContext);
   const { readonly } = React.useContext(FileContext);
@@ -18,24 +21,27 @@ export default function TopicsCreate() {
   const closeModal = () => {
     setError(undefined);
     setTitle("");
-    setDescription("");
+    setDetail("");
     setIsActive(false);
   };
 
   const onSave = () => {
     setError(undefined);
-    const newTopic: ITopic = {
-      sequence: storeContext.store.topics.lastSequence + 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      status: "ACTIVE",
-      lastEventsSequence: 0,
-      events: [],
-      title,
-      description,
-      elements: [],
-    };
-    createTopicOperation(newTopic, storeContext)
+
+    const topicName = "inbox";
+
+    ensureTopicOperation(topicName, storeContext)
+      .then((topic) => {
+        const newElement: IElement = {
+          sequence: storeContext.store.elements.lastSequence + 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          topic: topic.sequence,
+          title,
+          detail,
+        };
+        return createElementOperation(newElement, storeContext);
+      })
       .then(() => {
         closeModal();
       })
@@ -71,7 +77,7 @@ export default function TopicsCreate() {
                   />
                 </svg>
               </i>
-              <span>Nouveau sujet</span>
+              <span>Nouvel élément</span>
             </button>
           </div>
           <div
@@ -81,7 +87,7 @@ export default function TopicsCreate() {
             <div className="modal-background"></div>
             <div className="modal-card">
               <header className="modal-card-head">
-                <p className="modal-card-title">Nouveau sujet</p>
+                <p className="modal-card-title">Nouvel élément</p>
                 <button
                   className="delete"
                   aria-label="close"
@@ -104,7 +110,7 @@ export default function TopicsCreate() {
                         type="text"
                         required
                         name="title"
-                        placeholder="nouveau-sujet-1"
+                        placeholder="nouvel-element-1"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                       />
@@ -115,11 +121,11 @@ export default function TopicsCreate() {
                     <label className="label">Description</label>
                     <div className="control">
                       <textarea
-                        name="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        name="detail"
+                        value={detail}
+                        onChange={(e) => setDetail(e.target.value)}
                         className="textarea"
-                        placeholder="description du nouveau sujet...."
+                        placeholder="détail de l'élément...."
                       ></textarea>
                     </div>
                   </div>

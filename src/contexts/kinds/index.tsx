@@ -1,23 +1,23 @@
 import React from "react";
 
-import ActivitiesPanel from "../../pages/activities";
 import TopicsPanel from "../../pages/topics";
+import ElementsPanel from "../../pages/elements";
 
-export type KindView = "activities" | "topics";
+export type KindView = "activities" | "topics" | "elements";
 export type KindContextType = {
   current: KindView;
   setCurrent: (value: KindView) => void;
 };
 
 export const KindContext = React.createContext<KindContextType>({
-  current: "activities",
+  current: "elements",
   setCurrent: () => {
     return;
   },
 });
 
 export default function KindContextProvider() {
-  const [current, setCurrent] = React.useState<KindView>("activities");
+  const [current, setCurrent] = React.useState<KindView>("elements");
 
   return (
     <KindContext.Provider value={{ current, setCurrent }}>
@@ -33,6 +33,15 @@ export default function KindContextProvider() {
             Activités
           </a>
           <a
+            className={current === "elements" ? "is-active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrent("elements");
+            }}
+          >
+            Elements
+          </a>
+          <a
             className={current === "topics" ? "is-active" : ""}
             onClick={(e) => {
               e.preventDefault();
@@ -43,7 +52,7 @@ export default function KindContextProvider() {
           </a>
         </p>
 
-        {current === "activities" && <ActivitiesPanel />}
+        {current === "elements" && <ElementsPanel />}
         {current === "topics" && <TopicsPanel />}
       </nav>
     </KindContext.Provider>
