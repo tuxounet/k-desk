@@ -14,6 +14,7 @@ export default async function changeNodeStatusOperation(
   const newStore: IDataStore = {
     ...storeContext.store,
   };
+  newStore.updatedAt = new Date();
 
   const found = newStore.nodes.items.find(
     (item) => item.sequence === node.sequence

@@ -11,7 +11,7 @@ export default async function loadStoreOperation(
   const store = await parseFileOperation(body);
 
   const rootGroup = store.nodes.items.find(
-    (item) => item.kind === "group" && item.sequence ===  item.parent
+    (item) => item.kind === "group" && item.sequence === item.parent
   );
   if (!rootGroup) {
     store.nodes.items.push({
@@ -25,7 +25,8 @@ export default async function loadStoreOperation(
       status: constants.INITIAL_NODE_STATUS,
     });
     store.nodes.lastSequence = store.nodes.lastSequence + 1;
-
+    store.updatedAt = new Date();
+    
     const newBody = await serializeFileOperation(store);
     // create a FileSystemWritableFileStream to write to
     const writableStream = await handle.createWritable();

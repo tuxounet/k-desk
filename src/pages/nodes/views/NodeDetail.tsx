@@ -13,6 +13,7 @@ import changeNodeStatusOperation from "../operations/changeNodeStatus";
 import DateText from "../components/DateText";
 import LinkToNode from "../components/LinkToNode";
 import { FileContext } from "../../../contexts/file";
+import NodeEditView from "./NodeEdit";
 
 interface NodeDetailViewProps {
   item?: number;
@@ -31,7 +32,6 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
       const found = allNodes.find((e) => e.sequence === item);
       if (found) {
         setNode(found);
-        console.dir(found);
         return;
       } else {
         setNode(undefined);
@@ -135,10 +135,7 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
             <div className={`card-content`}>
               <div className="panel-block">
                 Parent :
-                <LinkToNode
-                  sequence={node.parent}
-                 
-                />{" "}
+                <LinkToNode sequence={node.parent} />{" "}
               </div>
               {node.childs &&
                 node.childs.map((item) => (
@@ -155,6 +152,7 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
                 </header>
 
                 <footer className={`card-footer`}>
+                  <NodeEditView item={node} />
                   {node.sequence !== node.parent && (
                     <a className="card-footer-item has-background-danger-light">
                       Supprimer

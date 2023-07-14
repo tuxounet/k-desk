@@ -3,23 +3,25 @@ import { IDataNode } from "../../../contexts/datastore/types/IDataNode";
 
 import { IDataStore } from "../../../contexts/datastore/types/IDataStore";
 
-export default async function createNodeOperation(
-  newNode: IDataNode,
+export default async function updateNodeOperation(
+  updatedNode: IDataNode,
   storeContext: DataStoreContextType
 ): Promise<boolean> {
   const newStore: IDataStore = {
     ...storeContext.store,
   };
   newStore.updatedAt = new Date();
-  
-  newNode.sequence = newStore.nodes.lastSequence + 1;
-  newStore.nodes.items.push(newNode);
-  newStore.nodes.lastSequence = newNode.sequence;
+  const index = newStore.nodes.items.findIndex(
+    (item) => item.sequence === updatedNode.sequence
+  );
+
+  newStore.nodes.items[index] = updatedNode;
+  updatedNode.updatedAt = new Date();
   newStore.events.items.push({
     sequence: newStore.events.lastSequence + 1,
     date: new Date(),
-    event: "NODE_CREATED",
-    label: "création de l'élément " + newNode.sequence,
+    event: "NODE_UPDATED",
+    label: "modification de l'élément " + updatedNode.sequence,
   });
   newStore.events.lastSequence = newStore.events.lastSequence + 1;
 

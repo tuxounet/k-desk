@@ -54,14 +54,15 @@ export default function StoreMap({ data }: StoreMapProps) {
         nodeAutoColorBy="group"
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.label;
-          const fontSize = 12 / globalScale;
-          ctx.font = `${fontSize}px Sans-Serif`;
+          const fontSize = 16 / globalScale;
+          ctx.font = `${fontSize}px Open Sans`;
           const textWidth = ctx.measureText(label).width;
           const bckgDimensions = [textWidth, fontSize].map(
-            (n) => n + fontSize * 0.2
+            (n) => n + fontSize * 0.2 + 3
           ); // some padding
 
-          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+          ctx.fillStyle = node.color;
+
           ctx.fillRect(
             (node.x ?? 0) - bckgDimensions[0] / 2,
             (node.y ?? 0) - bckgDimensions[1] / 2,
@@ -71,7 +72,9 @@ export default function StoreMap({ data }: StoreMapProps) {
 
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillStyle = node.color;
+         
+          ctx.fillStyle = "rgba(255, 255, 255, 1)";
+
           ctx.fillText(label, node.x ?? 0, node.y ?? 0);
 
           node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint

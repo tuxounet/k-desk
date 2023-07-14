@@ -1,6 +1,7 @@
 import React from "react";
 import {
   DataNodeKindTypes,
+  DataNodeStatus,
   IDataNode,
 } from "../../../contexts/datastore/types/IDataNode";
 import constants from "../../../constants";
@@ -17,7 +18,11 @@ export interface NodeFormProps {
 }
 
 export default function NodeForm(props: NodeFormProps) {
+  const [sequence, setSequence] = React.useState<number>(0);
   const [kind, setKind] = React.useState<DataNodeKindTypes>("element");
+  const [status, setStatus] = React.useState<DataNodeStatus>(
+    constants.INITIAL_NODE_STATUS
+  );
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [parent, setParent] = React.useState(0);
@@ -61,7 +66,12 @@ export default function NodeForm(props: NodeFormProps) {
       }
     }
     setAllParents(parents);
-
+    setSequence(props.initialValue ? props.initialValue.sequence : 0);
+    setStatus(
+      props.initialValue
+        ? props.initialValue.status
+        : constants.INITIAL_NODE_STATUS
+    );
     setKind(props.initialValue ? props.initialValue.kind : "element");
     setTitle(props.initialValue ? props.initialValue.title : "");
     setDescription(props.initialValue ? props.initialValue.description : "");
@@ -70,10 +80,10 @@ export default function NodeForm(props: NodeFormProps) {
 
   const onSubmitForm = () => {
     const newNode: IDataNode = {
-      sequence: 0,
+      sequence,
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: constants.INITIAL_NODE_STATUS,
+      status: status,
       title,
       description,
       kind,
@@ -135,6 +145,8 @@ export default function NodeForm(props: NodeFormProps) {
         <div className="control">
           <div className="select">
             <select
+              name="parent"
+              required
               value={parent}
               onChange={(e) => {
                 setParent(parseInt(e.target.value));
@@ -145,6 +157,25 @@ export default function NodeForm(props: NodeFormProps) {
                   {item.label}
                 </option>
               ))}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div className="field">
+        <label className="label">Etat</label>
+        <div className="control">
+          <div className="select">
+            <select
+              name="status"
+              required
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value as any);
+              }}
+            >
+              <option value={"ACTIVE"}>Actif</option>
+              <option value={"PENDING"}>En attente</option>
+              <option value={"COMPLETED"}>Terminé</option>
             </select>
           </div>
         </div>

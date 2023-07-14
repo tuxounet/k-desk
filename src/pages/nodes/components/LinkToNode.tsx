@@ -36,7 +36,7 @@ export default function LinkToNode({ sequence }: LinkToNodeProps) {
       {!node && <></>}
       {node && (
         <>
-          <a onClick={onGoNode}>
+          <a onClick={onGoNode} className="ml-2 mr-2">
             #{node.sequence}{" "}
             {node && (
               <span>
