@@ -7,6 +7,7 @@ import createNodeOperation from "../operations/createNode";
 import NodeForm from "../components/NodeForm";
 export default function NodeCreateView() {
   const [error, setError] = React.useState<string>();
+  const [initialValue, setInitialValue] = React.useState<IDataNode>();
   const [isActive, setIsActive] = React.useState(false);
 
   const storeContext = React.useContext(DataStoreContext);
@@ -23,9 +24,10 @@ export default function NodeCreateView() {
 
   const onFormSave = (newNode: IDataNode) => {
     setError(undefined);
-
+    setInitialValue(newNode);
     createNodeOperation(newNode, storeContext)
       .then(() => {
+        setInitialValue(undefined);
         closeModal();
       })
       .catch((e: Error) => {
@@ -80,7 +82,7 @@ export default function NodeCreateView() {
 
               <section className="modal-card-body">
                 <NodeForm
-                  initialValue={undefined}
+                  initialValue={initialValue}
                   onSave={onFormSave}
                   onCancel={closeModal}
                 />

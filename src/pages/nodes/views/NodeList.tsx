@@ -20,7 +20,15 @@ export default function NodeListView() {
     let allNodes: IDataNode[] = store.nodes.items || [];
 
     if (status) {
-      allNodes = allNodes.filter((item) => item.status === status);
+      const filteredNodes = allNodes
+
+        .filter((item) => {
+          const parentNode = allNodes.find((o) => o.sequence === item.parent);
+          if (!parentNode) return false;
+          return parentNode.status === status || item.status === status;
+        })
+       
+      allNodes = filteredNodes;
     }
 
     if (filter) {
@@ -30,6 +38,7 @@ export default function NodeListView() {
           item.description.toLowerCase().includes(filter.toLowerCase())
       );
     }
+
     allNodes.sort((a, b) => {
       return a.sequence > b.sequence ? 1 : -1;
     });

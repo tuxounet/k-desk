@@ -1,7 +1,7 @@
 export interface IDataNode {
   sequence: number;
   kind: DataNodeKindTypes;
-  parent?: number;
+  parent: number;
   childs?: IDataReference[];
   createdAt: Date;
   updatedAt: Date;

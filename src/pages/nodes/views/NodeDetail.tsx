@@ -12,11 +12,13 @@ import NodeStatusText from "../components/NodeStatusText";
 import changeNodeStatusOperation from "../operations/changeNodeStatus";
 import DateText from "../components/DateText";
 import LinkToNode from "../components/LinkToNode";
+import { FileContext } from "../../../contexts/file";
 
 interface NodeDetailViewProps {
   item?: number;
 }
 export default function NodeDetailView({ item }: NodeDetailViewProps) {
+  const { readonly } = React.useContext(FileContext);
   const storeContext = React.useContext(DataStoreContext);
   const { setData } = React.useContext(KindContext);
 
@@ -29,6 +31,7 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
       const found = allNodes.find((e) => e.sequence === item);
       if (found) {
         setNode(found);
+        console.dir(found);
         return;
       } else {
         setNode(undefined);
@@ -72,12 +75,71 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
               <hr />
             </div>
           </div>
-
+          {!readonly && (
+            <div className="card is-fullwidth">
+              <header className="card-header">
+                <a className="card-header-title">Etat</a>
+              </header>
+              <footer className={`card-footer`}>
+                {node.status !== "COMPLETED" && (
+                  <>
+                    {node.status === "ACTIVE" && (
+                      <a
+                        className="card-footer-item"
+                        onClick={() => {
+                          onChangeStatus("PENDING");
+                        }}
+                      >
+                        Suspendre
+                      </a>
+                    )}
+                    {node.status === "PENDING" && (
+                      <a
+                        className="card-footer-item"
+                        onClick={() => {
+                          onChangeStatus("ACTIVE");
+                        }}
+                      >
+                        Reprendre
+                      </a>
+                    )}
+                    <a
+                      className="card-footer-item"
+                      onClick={() => {
+                        onChangeStatus("COMPLETED");
+                      }}
+                    >
+                      Terminer
+                    </a>
+                  </>
+                )}
+                {node.status === "COMPLETED" && (
+                  <>
+                    <a
+                      className="card-footer-item"
+                      onClick={() => {
+                        onChangeStatus("ACTIVE");
+                      }}
+                    >
+                      Réactiver
+                    </a>
+                  </>
+                )}
+              </footer>
+            </div>
+          )}
           <div className="card is-fullwidth">
             <header className="card-header">
               <a className="card-header-title">Références</a>
             </header>
             <div className={`card-content`}>
+              <div className="panel-block">
+                Parent :
+                <LinkToNode
+                  sequence={node.parent}
+                 
+                />{" "}
+              </div>
               {node.childs &&
                 node.childs.map((item) => (
                   <div className="panel-block">
@@ -86,52 +148,21 @@ export default function NodeDetailView({ item }: NodeDetailViewProps) {
                   </div>
                 ))}
             </div>{" "}
-            <footer className={`card-footer`}>
-              {node.status !== "COMPLETED" && (
-                <>
-                  {node.status === "ACTIVE" && (
-                    <a
-                      className="card-footer-item"
-                      onClick={() => {
-                        onChangeStatus("PENDING");
-                      }}
-                    >
-                      Suspendre
+            {!readonly && (
+              <div className="card is-fullwidth">
+                <header className="card-header">
+                  <a className="card-header-title">Actions</a>
+                </header>
+
+                <footer className={`card-footer`}>
+                  {node.sequence !== node.parent && (
+                    <a className="card-footer-item has-background-danger-light">
+                      Supprimer
                     </a>
                   )}
-                  {node.status === "PENDING" && (
-                    <a
-                      className="card-footer-item"
-                      onClick={() => {
-                        onChangeStatus("ACTIVE");
-                      }}
-                    >
-                      Reprendre
-                    </a>
-                  )}
-                  <a
-                    className="card-footer-item"
-                    onClick={() => {
-                      onChangeStatus("COMPLETED");
-                    }}
-                  >
-                    Terminer
-                  </a>
-                </>
-              )}
-              {node.status === "COMPLETED" && (
-                <>
-                  <a
-                    className="card-footer-item"
-                    onClick={() => {
-                      onChangeStatus("ACTIVE");
-                    }}
-                  >
-                    Réactiver
-                  </a>
-                </>
-              )}
-            </footer>
+                </footer>
+              </div>
+            )}
           </div>
         </>
       )}

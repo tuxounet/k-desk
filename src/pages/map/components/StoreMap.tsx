@@ -19,19 +19,18 @@ export default function StoreMap({ data }: StoreMapProps) {
 
     const elementNodes = data.map((item) => {
       const result: IMapNode = {
-        sequence: item.sequence,
+        id: item.sequence,
         label: item.title,
-        group: item.parent,
+        group: item.kind === "group" ? 0 : 1,
         view: "nodes",
       };
-      if (item.parent) {
+      if (item.parent && item.parent !== item.sequence) {
         links.push({
           source: item.parent,
           target: item.sequence,
           value: "child",
         });
       }
-
       return result;
     });
 
@@ -39,7 +38,7 @@ export default function StoreMap({ data }: StoreMapProps) {
     setLinks(links);
   }, [data]);
   const onNodeSelected = (node: IMapNode) => {
-    setData(node.sequence);
+    setData(node.id);
     setCurrent(node.view);
   };
   return (

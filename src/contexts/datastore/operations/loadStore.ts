@@ -1,3 +1,4 @@
+import constants from "../../../constants";
 import parseFileOperation from "../../file/operations/parseFile";
 import serializeFileOperation from "../../file/operations/serializeFile";
 import { IDataStore } from "../types/IDataStore";
@@ -9,10 +10,10 @@ export default async function loadStoreOperation(
   const body = await file.text();
   const store = await parseFileOperation(body);
 
-  const inboxTopic = store.nodes.items.find(
-    (item) => item.kind === "group" && item.title === "inbox"
+  const rootGroup = store.nodes.items.find(
+    (item) => item.kind === "group" && item.sequence ===  item.parent
   );
-  if (!inboxTopic) {
+  if (!rootGroup) {
     store.nodes.items.push({
       sequence: store.nodes.lastSequence + 1,
       title: "inbox",
@@ -20,7 +21,8 @@ export default async function loadStoreOperation(
       updatedAt: new Date(),
       description: "",
       kind: "group",
-      status: "ACTIVE",
+      parent: store.nodes.lastSequence + 1,
+      status: constants.INITIAL_NODE_STATUS,
     });
     store.nodes.lastSequence = store.nodes.lastSequence + 1;
 

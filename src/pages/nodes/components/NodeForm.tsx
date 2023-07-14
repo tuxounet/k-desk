@@ -3,6 +3,12 @@ import {
   DataNodeKindTypes,
   IDataNode,
 } from "../../../contexts/datastore/types/IDataNode";
+import constants from "../../../constants";
+
+import {
+  DataStoreContext,
+  DataStoreContextType,
+} from "../../../contexts/datastore";
 
 export interface NodeFormProps {
   initialValue?: IDataNode;
@@ -14,11 +20,52 @@ export default function NodeForm(props: NodeFormProps) {
   const [kind, setKind] = React.useState<DataNodeKindTypes>("element");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [parent, setParent] = React.useState(0);
+  const [allParents, setAllParents] = React.useState<
+    { label: string; sequence: number }[]
+  >([]);
+  const storeContext = React.useContext(
+    DataStoreContext
+  ) as DataStoreContextType;
 
   React.useEffect(() => {
+    const parents = storeContext.store.nodes.items
+      .filter((item) => item.kind === "group")
+      .map((item) => {
+        return {
+          parent: item.parent,
+          kind: item.kind,
+          label: item.title,
+          sequence: item.sequence,
+        };
+      });
+    parents.sort((a, b) => {
+      return a.sequence > b.sequence ? 1 : -1;
+    });
+
+    let current: number = 0;
+    if (props.initialValue) {
+      const found = parents.find(
+        (item) => item.sequence === props.initialValue?.sequence
+      );
+      if (found) {
+        current = found.sequence;
+      }
+    }
+    if (current === 0) {
+      const rootParent = parents.find(
+        (item) => item.sequence === item.parent && item.kind === "group"
+      );
+      if (rootParent) {
+        current = rootParent.sequence;
+      }
+    }
+    setAllParents(parents);
+
     setKind(props.initialValue ? props.initialValue.kind : "element");
     setTitle(props.initialValue ? props.initialValue.title : "");
     setDescription(props.initialValue ? props.initialValue.description : "");
+    setParent(props.initialValue ? props.initialValue.parent : current);
   }, [props.initialValue]);
 
   const onSubmitForm = () => {
@@ -26,11 +73,13 @@ export default function NodeForm(props: NodeFormProps) {
       sequence: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: "ACTIVE",
+      status: constants.INITIAL_NODE_STATUS,
       title,
       description,
       kind,
+      parent,
     };
+
     props.onSave(newNode);
     onCloseForm();
   };
@@ -81,6 +130,25 @@ export default function NodeForm(props: NodeFormProps) {
         </div>
       </div>
 
+      <div className="field">
+        <label className="label">Parent</label>
+        <div className="control">
+          <div className="select">
+            <select
+              value={parent}
+              onChange={(e) => {
+                setParent(parseInt(e.target.value));
+              }}
+            >
+              {allParents.map((item) => (
+                <option value={item.sequence} key={item.sequence}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
       <div className="field">
         <label className="label">Description</label>
         <div className="control">

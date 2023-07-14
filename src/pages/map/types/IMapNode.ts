@@ -1,7 +1,7 @@
 import { KindView } from "../../../contexts/kinds";
 
 export interface IMapNode {
-  sequence: number;
+  id: number;
 
   label: string;
   view: KindView;
