@@ -2,6 +2,7 @@ import { IElement } from "./IElement";
 import { ITopic } from "./ITopic";
 
 export interface IDataStore {
+  version: string;
   topics: {
     lastSequence: number;
     items: ITopic[];
@@ -13,6 +14,7 @@ export interface IDataStore {
 }
 
 export const defaultDataStore: IDataStore = {
+  version: "v0",
   topics: {
     lastSequence: 0,
     items: [],
