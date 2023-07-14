@@ -19,13 +19,13 @@ export default async function createElementOperation(
   );
   if (elementTopic) {
     elementTopic.elements.push(newElement.sequence);
-    elementTopic.events.push({
-      sequence: elementTopic.lastEventsSequence + 1,
+    newStore.events.items.push({
+      sequence: newStore.events.lastSequence + 1,
       date: new Date(),
       event: "ADD",
       label: `l'element #${newElement.sequence} ajouté au sujet`,
     });
-    elementTopic.lastEventsSequence = elementTopic.lastEventsSequence + 1;
+    newStore.events.lastSequence = newStore.events.lastSequence + 1;
   }
   return await storeContext.save(newStore);
 }

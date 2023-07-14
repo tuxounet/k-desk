@@ -25,18 +25,19 @@ export default async function ensureTopicOperation(
     elements: [],
 
     status: "ACTIVE",
-    lastEventsSequence: 1,
-    events: [
-      {
-        sequence: 1,
-        date: new Date(),
-        event: "CREATED",
-        label: "création du sujet",
-      },
-    ],
   };
   newStore.topics.items.push(newTopic);
   newStore.topics.lastSequence = newTopic.sequence;
+
+  newStore.events.items.push({
+    sequence: newStore.events.lastSequence + 1,
+    date: new Date(),
+    event: "CREATED",
+    label: "création du sujet",
+  });
+
+  newStore.events.lastSequence = newStore.events.lastSequence + 1;
+
   await storeContext.save(newStore);
 
   return newTopic;

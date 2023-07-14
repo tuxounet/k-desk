@@ -1,4 +1,5 @@
 import { IElement } from "./IElement";
+import { IEvent } from "./IEvent";
 import { ITopic } from "./ITopic";
 
 export interface IDataStore {
@@ -11,6 +12,10 @@ export interface IDataStore {
     lastSequence: number;
     items: IElement[];
   };
+  events: {
+    lastSequence: number;
+    items: IEvent[];
+  };
 }
 
 export const defaultDataStore: IDataStore = {
@@ -21,6 +26,10 @@ export const defaultDataStore: IDataStore = {
   },
 
   elements: {
+    lastSequence: 0,
+    items: [],
+  },
+  events: {
     lastSequence: 0,
     items: [],
   },

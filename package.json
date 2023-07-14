@@ -13,6 +13,7 @@
     "@fontsource/open-sans": "^5.0.5",
     "bulma": "^0.9.4",
     "file-system-access": "^1.0.4",
+    "js-yaml": "^4.1.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,6 +21,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/uuid": "^9.0.2",

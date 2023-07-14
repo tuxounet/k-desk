@@ -6,7 +6,7 @@ export default async function openFileOperation(readonly: boolean) {
       {
         description: "k-desk files",
         accept: {
-          "application/json": [".desk.json", ".json"],
+          "text/yaml": [".desk.yaml", ".yaml"],
         },
       },
     ],

@@ -4,7 +4,6 @@ interface TopicsPanelProps {
   item?: number;
 }
 export default function TopicsPanel({ item }: TopicsPanelProps) {
-  console.info(item);
   return (
     <>
       {item && <TopicDetailView item={item} />}

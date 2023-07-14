@@ -4,6 +4,7 @@ import moment from "moment";
 import "moment/locale/fr";
 
 import { IElement } from "../../../contexts/datastore/types/IElement";
+import LinkToTopic from "../../topics/components/LinkToTopic";
 
 interface ElementListItemProps {
   element: IElement;
@@ -35,7 +36,7 @@ export default function ElementListItem({ element }: ElementListItemProps) {
               />
             </svg>
           </span>
-          <span className="has-text-weight-bold ml-2">
+          <span className="has-text-weight-semibold ml-2">
             #{element.sequence} {element.title}
           </span>
         </a>
@@ -81,7 +82,7 @@ export default function ElementListItem({ element }: ElementListItemProps) {
       <div className={`card-content ${!expanded ? "is-hidden" : ""}`}>
         <pre>{element.detail}</pre>
         <p>
-          Sujet #{element.topic}
+          Sujet <LinkToTopic sequence={element.topic} />
           <br />
           Crée le: {moment(element.createdAt).locale("fr").calendar()}
           <br />

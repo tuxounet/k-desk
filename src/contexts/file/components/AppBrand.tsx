@@ -13,10 +13,10 @@ export default function AppBrand(props: AppBrandProps) {
       </div>
       <div className="level-item">
         <p className="subtitle is-5">
-          <span className="has-text-weight-bold">k-desk</span>
-          {props.filename && (
-            <span className="ml-3">/&nbsp;{props.filename}</span>
+          {!props.filename && (
+            <span className="has-text-weight-bold">k-desk</span>
           )}
+          {props.filename && <span>{props.filename}</span>}
         </p>
       </div>
     </div>

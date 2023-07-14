@@ -29,8 +29,6 @@ export default function TopicsCreate() {
       createdAt: new Date(),
       updatedAt: new Date(),
       status: "ACTIVE",
-      lastEventsSequence: 0,
-      events: [],
       title,
       description,
       elements: [],

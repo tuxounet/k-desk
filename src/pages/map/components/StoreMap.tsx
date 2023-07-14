@@ -48,7 +48,6 @@ export default function StoreMap({ elements, topics }: StoreMapProps) {
     setLinks(links);
   }, [elements, topics]);
   const onNodeSelected = (node: IMapNode) => {
-    console.dir(node);
     setData(node.sequence);
     setCurrent(node.view);
   };

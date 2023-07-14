@@ -8,7 +8,8 @@ import {
 import TopicStatusText from "./TopicStatusText";
 import moment from "moment";
 import "moment/locale/fr";
-import { KindContext } from "../../../contexts/kinds";
+
+import LinkToElement from "../../elements/components/LinkToElement";
 
 interface TopicItemProps {
   topic: ITopic;
@@ -19,7 +20,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
   const storeContext = React.useContext(
     DataStoreContext
   ) as DataStoreContextType;
-  const { setCurrent, setData } = React.useContext(KindContext);
+
   const onChangeStatus = (newStatus: TopicStatus) => {
     changeTopicStatusOperation(topic, newStatus, storeContext);
   };
@@ -46,7 +47,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
               />
             </svg>
           </span>
-          <span className="has-text-weight-bold ml-2">
+          <span className="has-text-weight-semibold ml-2">
             #{topic.sequence} {topic.title} (
             <TopicStatusText status={topic.status} />)
           </span>
@@ -99,38 +100,13 @@ export default function TopicItem({ topic }: TopicItemProps) {
           Dernière mise à jour:{" "}
           {moment(topic.createdAt).locale("fr").calendar()}
         </p>
+        <hr />
         <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
-          Eléments
+          Eléments associés
         </div>
 
         {topic.elements.map((item) => (
-          <a
-            className="panel-block is-active"
-            key={`#${item}`}
-            onClick={() => {
-              setData(item);
-              setCurrent("elements");
-            }}
-          >
-            <span className="panel-icon">
-              <i className="fas fa-book" aria-hidden="true"></i>
-            </span>
-            #{item}
-          </a>
-        ))}
-
-        <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
-          Historique
-        </div>
-
-        {topic.events.map((item) => (
-          <div key={item.sequence} className="panel-block">
-            <span className="panel-icon">
-              <i className="fas fa-book" aria-hidden="true"></i>
-            </span>
-            #{item.sequence} {moment(item.date).locale("fr").calendar()}{" "}
-            {item.label}
-          </div>
+          <LinkToElement sequence={item} key={`#${item}`} />
         ))}
       </div>
       <footer className={`card-footer ${!expanded ? "is-hidden" : ""}`}>

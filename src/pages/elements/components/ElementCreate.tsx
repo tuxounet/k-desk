@@ -37,7 +37,6 @@ export default function ElementCreate() {
   const onSave = async () => {
     setError(undefined);
     try {
-      console.dir(topic);
       let targetTopic: ITopic | undefined;
       if (topic) {
         targetTopic = await getTopicOperation(topic, storeContext);
@@ -49,6 +48,7 @@ export default function ElementCreate() {
         sequence: storeContext.store.elements.lastSequence + 1,
         createdAt: new Date(),
         updatedAt: new Date(),
+        status: "ACTIVE",
         topic: targetTopic?.sequence ?? 1,
         title,
         detail,

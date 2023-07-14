@@ -18,13 +18,13 @@ export default async function createTopicOperation(
   if (found) {
     throw new Error("un topic avec le même nom est déjà présent");
   }
-  newTopic.events.push({
-    sequence: 1,
+  newStore.events.items.push({
+    sequence: newStore.events.lastSequence + 1,
     date: new Date(),
     event: "CREATED",
-    label: "création du sujet",
+    label: "création du sujet ",
   });
-  newTopic.lastEventsSequence = 1;
+  newStore.events.lastSequence = newStore.events.lastSequence + 1;
   newStore.topics.items.push(newTopic);
   newStore.topics.lastSequence = newTopic.sequence;
   return await storeContext.save(newStore);

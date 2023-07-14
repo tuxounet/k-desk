@@ -2,36 +2,36 @@ import React from "react";
 
 import { DataStoreContext } from "../../../contexts/datastore";
 
-import { ITopic } from "../../../contexts/datastore/types/ITopic";
 import { KindContext } from "../../../contexts/kinds";
+import { IElement } from "../../../contexts/datastore/types/IElement";
 
-interface TopicDetailViewProps {
+interface ElementDetailViewProps {
   item?: number;
 }
-export default function TopicDetailView({ item }: TopicDetailViewProps) {
+export default function ElementDetailView({ item }: ElementDetailViewProps) {
   const { store } = React.useContext(DataStoreContext);
   const { setData } = React.useContext(KindContext);
 
-  const [topic, setTopic] = React.useState<ITopic>();
+  const [element, setElement] = React.useState<IElement>();
   React.useEffect(() => {
-    let allTopics: ITopic[] = store.topics.items || [];
+    let allElements: IElement[] = store.elements.items || [];
 
     if (item) {
-      const topic = allTopics.find((e) => e.sequence === item);
-      if (topic) {
-        setTopic(topic);
+      const element = allElements.find((e) => e.sequence === item);
+      if (element) {
+        setElement(element);
         return;
       } else {
-        setTopic(undefined);
+        setElement(undefined);
       }
     }
   }, [store, item]);
 
   return (
     <>
-      {topic && (
+      {element && (
         <p className="panel-heading">
-          Sujet #{topic.sequence}
+          Element #{element.sequence}
           <button
             onClick={() => {
               setData(undefined);
