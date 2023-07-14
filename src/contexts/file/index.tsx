@@ -18,6 +18,7 @@ interface FileContextProviderProps {
 
 export default function FileContextProvider(props: FileContextProviderProps) {
   const [error, setError] = React.useState<string>();
+
   const [fileHandle, setFileHandle] = React.useState<FileSystemFileHandle>();
   const [readonly] = React.useState(
     typeof window.showSaveFilePicker === "undefined"

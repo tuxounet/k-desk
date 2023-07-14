@@ -3,35 +3,35 @@ import React from "react";
 import { DataStoreContext } from "../../../contexts/datastore";
 
 import { KindContext } from "../../../contexts/kinds";
-import { IElement } from "../../../contexts/datastore/types/IElement";
+import { IDataNode } from "../../../contexts/datastore/types/IDataNode";
 
-interface ElementDetailViewProps {
+interface NodeDetailViewProps {
   item?: number;
 }
-export default function ElementDetailView({ item }: ElementDetailViewProps) {
+export default function NodeDetailView({ item }: NodeDetailViewProps) {
   const { store } = React.useContext(DataStoreContext);
   const { setData } = React.useContext(KindContext);
 
-  const [element, setElement] = React.useState<IElement>();
+  const [node, setNode] = React.useState<IDataNode>();
   React.useEffect(() => {
-    let allElements: IElement[] = store.elements.items || [];
+    let allNodes: IDataNode[] = store.nodes.items || [];
 
     if (item) {
-      const element = allElements.find((e) => e.sequence === item);
-      if (element) {
-        setElement(element);
+      const found = allNodes.find((e) => e.sequence === item);
+      if (found) {
+        setNode(found);
         return;
       } else {
-        setElement(undefined);
+        setNode(undefined);
       }
     }
   }, [store, item]);
 
   return (
     <>
-      {element && (
+      {node && (
         <p className="panel-heading">
-          Element #{element.sequence}
+          #{node.sequence} ({node.kind})
           <button
             onClick={() => {
               setData(undefined);

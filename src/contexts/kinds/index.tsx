@@ -1,15 +1,16 @@
 import React from "react";
-
-import TopicsPanel from "../../pages/topics";
-import ElementsPanel from "../../pages/elements";
+import NodesPanel from "../../pages/nodes";
 import MapPanel from "../../pages/map";
 
-export type KindView = "map" | "topics" | "elements";
+export type KindView = "map" | "nodes";
+export type KindAction = "list" | "detail" | "edit";
 export type KindContextType = {
   current: KindView;
   setCurrent: (value: KindView) => void;
   data?: number;
   setData: (value: number | undefined) => void;
+  action: KindAction;
+  setAction: (value: KindAction) => void;
 };
 
 export const KindContext = React.createContext<KindContextType>({
@@ -21,13 +22,20 @@ export const KindContext = React.createContext<KindContextType>({
   setData: () => {
     return;
   },
+  action: "list",
+  setAction: () => {
+    return;
+  },
 });
 
 export default function KindContextProvider() {
   const [current, setCurrent] = React.useState<KindView>("map");
   const [data, setData] = React.useState<number | undefined>();
+  const [action, setAction] = React.useState<KindAction>("list");
   return (
-    <KindContext.Provider value={{ current, setCurrent, data, setData }}>
+    <KindContext.Provider
+      value={{ current, setCurrent, data, setData, action, setAction }}
+    >
       <nav className="panel">
         <p className="panel-tabs">
           <a
@@ -41,29 +49,18 @@ export default function KindContextProvider() {
             Carte
           </a>
           <a
-            className={current === "elements" ? "is-active" : ""}
+            className={current === "nodes" ? "is-active" : ""}
             onClick={(e) => {
               e.preventDefault();
               setData(undefined);
-              setCurrent("elements");
+              setCurrent("nodes");
             }}
           >
             Elements
           </a>
-          <a
-            className={current === "topics" ? "is-active" : ""}
-            onClick={(e) => {
-              e.preventDefault();
-              setData(undefined);
-              setCurrent("topics");
-            }}
-          >
-            Sujets
-          </a>
         </p>
         {current === "map" && <MapPanel />}
-        {current === "elements" && <ElementsPanel item={data} />}
-        {current === "topics" && <TopicsPanel item={data} />}
+        {current === "nodes" && <NodesPanel item={data} />}
       </nav>
     </KindContext.Provider>
   );

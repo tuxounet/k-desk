@@ -23,7 +23,7 @@ export default async function createFileOperation() {
     label: "Création du fichier",
     sequence: newData.events.lastSequence + 1,
   });
-  newData.events.lastSequence = newData.elements.lastSequence + 1;
+  newData.events.lastSequence = newData.events.lastSequence + 1;
 
   const newBody = await serializeFileOperation(newData);
   const newHandle = await showSaveFilePicker(pickerOpts);

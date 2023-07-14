@@ -1,41 +1,46 @@
-
-import { ITopic, TopicStatus } from "../../../contexts/datastore/types/ITopic";
-import TopicsList from "../components/TopicsList";
 import React from "react";
 import { DataStoreContext } from "../../../contexts/datastore";
-import TopicsCreate from "../components/TopicCreate";
-import TopicsStats from "../components/TopicsStats";
 
-export default function AllTopicsView() {
+import {
+  DataNodeStatus,
+  IDataNode,
+} from "../../../contexts/datastore/types/IDataNode";
+import NodeCreate from "../components/NodeCreate";
+import NodeStats from "../components/NodeStats";
+import NodeList from "../components/NodeList";
+
+export default function NodeListView() {
   const { store } = React.useContext(DataStoreContext);
   const [filter, setFilter] = React.useState<string>();
-  const [status, setStatus] = React.useState<TopicStatus | undefined>("ACTIVE");
-  const [topics, setTopics] = React.useState<ITopic[]>([]);
+  const [status, setStatus] = React.useState<DataNodeStatus | undefined>(
+    "ACTIVE"
+  );
+  const [nodes, setNodes] = React.useState<IDataNode[]>([]);
   React.useEffect(() => {
-    let allTopics: ITopic[] = store.topics.items || [];
+    let allNodes: IDataNode[] = store.nodes.items || [];
 
     if (status) {
-      allTopics = allTopics.filter((item) => item.status === status);
+      allNodes = allNodes.filter((item) => item.status === status);
     }
 
     if (filter) {
-      allTopics = allTopics.filter(
+      allNodes = allNodes.filter(
         (item) =>
           item.title.toLowerCase().includes(filter.toLowerCase()) ||
           item.description.toLowerCase().includes(filter.toLowerCase())
       );
     }
-    allTopics.sort((a, b) => {
+    allNodes.sort((a, b) => {
       return a.sequence > b.sequence ? 1 : -1;
     });
-    setTopics(allTopics);
+    setNodes(allNodes);
   }, [status, store, filter]);
 
   return (
     <>
       <p className="panel-heading">Sujets</p>
-      <TopicsStats store={store} />
-      <TopicsCreate />
+      <NodeCreate />
+      <NodeStats nodes={store.nodes.items} />
       <p className="panel-tabs">
         <a
           className={status === "ACTIVE" ? "is-active" : ""}
@@ -90,7 +95,7 @@ export default function AllTopicsView() {
           </i>
         </p>
       </div>
-      <TopicsList topics={topics} />
+      <NodeList nodes={nodes} />
     </>
   );
 }

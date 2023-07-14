@@ -1,11 +1,11 @@
 import React from "react";
-import { IDataStore } from "../../../contexts/datastore/types/IDataStore";
+import { IDataNode } from "../../../contexts/datastore/types/IDataNode";
 
 interface DataStoreStatsProps {
-  store: IDataStore;
+  nodes: IDataNode[];
 }
 
-export default function TopicsStats(props: DataStoreStatsProps) {
+export default function NodeStats(props: DataStoreStatsProps) {
   const [all, setAll] = React.useState(0);
   const [active, setActive] = React.useState(0);
   const [pending, setPending] = React.useState(0);
@@ -13,17 +13,11 @@ export default function TopicsStats(props: DataStoreStatsProps) {
   const [completed, setCompleted] = React.useState(0);
 
   React.useEffect(() => {
-    setAll(props.store.topics.items.length);
-    setCompleted(
-      props.store.topics.items.filter((p) => p.status === "COMPLETED").length
-    );
-    setActive(
-      props.store.topics.items.filter((p) => p.status === "ACTIVE").length
-    );
-    setPending(
-      props.store.topics.items.filter((p) => p.status === "PENDING").length
-    );
-  }, [props.store]);
+    setAll(props.nodes.length);
+    setCompleted(props.nodes.filter((p) => p.status === "COMPLETED").length);
+    setActive(props.nodes.filter((p) => p.status === "ACTIVE").length);
+    setPending(props.nodes.filter((p) => p.status === "PENDING").length);
+  }, [props.nodes]);
 
   return (
     <nav className="level is-mobile">

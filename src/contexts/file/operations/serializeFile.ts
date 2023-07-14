@@ -6,5 +6,6 @@ export default async function serializeFileOperation(
   return dump(store, {
     indent: 1,
     lineWidth: 1024,
+    sortKeys: true,
   });
 }

@@ -1,16 +1,14 @@
-import { IElement } from "./IElement";
+import { IDataNode } from "./IDataNode";
 import { IEvent } from "./IEvent";
-import { ITopic } from "./ITopic";
 
 export interface IDataStore {
   version: string;
-  topics: {
+  createdAt: Date;
+  updatedAt: Date;
+
+  nodes: {
     lastSequence: number;
-    items: ITopic[];
-  };
-  elements: {
-    lastSequence: number;
-    items: IElement[];
+    items: IDataNode[];
   };
   events: {
     lastSequence: number;
@@ -20,12 +18,9 @@ export interface IDataStore {
 
 export const defaultDataStore: IDataStore = {
   version: "v0",
-  topics: {
-    lastSequence: 0,
-    items: [],
-  },
-
-  elements: {
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  nodes: {
     lastSequence: 0,
     items: [],
   },

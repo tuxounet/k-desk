@@ -1,22 +1,25 @@
 import { DataStoreContextType } from "../../../contexts/datastore";
+import {
+  DataNodeStatus,
+  IDataNode,
+} from "../../../contexts/datastore/types/IDataNode";
 
 import { IDataStore } from "../../../contexts/datastore/types/IDataStore";
-import { ITopic, TopicStatus } from "../../../contexts/datastore/types/ITopic";
 
-export default async function changeTopicStatusOperation(
-  topic: ITopic,
-  newStatus: TopicStatus,
+export default async function changeNodeStatusOperation(
+  node: IDataNode,
+  newStatus: DataNodeStatus,
   storeContext: DataStoreContextType
 ): Promise<boolean> {
   const newStore: IDataStore = {
     ...storeContext.store,
   };
 
-  const found = newStore.topics.items.find(
-    (item) => item.sequence === topic.sequence
+  const found = newStore.nodes.items.find(
+    (item) => item.sequence === node.sequence
   );
   if (!found) {
-    throw new Error("topic introuvable");
+    throw new Error("élément introuvable");
   }
 
   if (found.status !== newStatus) {
@@ -24,7 +27,7 @@ export default async function changeTopicStatusOperation(
       sequence: newStore.events.lastSequence + 1,
       date: new Date(),
       event: "STATUS_CHANGED",
-      label: `le sujet est passé de '${found.status}' à '${newStatus}'`,
+      label: `l'élément ${found.sequence} est passé de '${found.status}' à '${newStatus}'`,
     });
     newStore.events.lastSequence = newStore.events.lastSequence + 1;
     found.updatedAt = new Date();

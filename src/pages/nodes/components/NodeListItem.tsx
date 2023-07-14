@@ -1,28 +1,32 @@
 import React from "react";
-import { ITopic, TopicStatus } from "../../../contexts/datastore/types/ITopic";
-import changeTopicStatusOperation from "../operations/changeTopicStatus";
+
 import {
   DataStoreContext,
   DataStoreContextType,
 } from "../../../contexts/datastore";
-import TopicStatusText from "./TopicStatusText";
 import moment from "moment";
 import "moment/locale/fr";
 
-import LinkToElement from "../../elements/components/LinkToElement";
+import {
+  DataNodeStatus,
+  IDataNode,
+} from "../../../contexts/datastore/types/IDataNode";
+import changeNodeStatusOperation from "../operations/changeNodeStatus";
+import NodeStatusText from "./NodeStatusText";
+import NodeIcon from "./NodeIcon";
 
-interface TopicItemProps {
-  topic: ITopic;
+interface NodeListItemProps {
+  node: IDataNode;
 }
 
-export default function TopicItem({ topic }: TopicItemProps) {
+export default function NodeListItem({ node }: NodeListItemProps) {
   const [expanded, setIsExpanded] = React.useState(false);
   const storeContext = React.useContext(
     DataStoreContext
   ) as DataStoreContextType;
 
-  const onChangeStatus = (newStatus: TopicStatus) => {
-    changeTopicStatusOperation(topic, newStatus, storeContext);
+  const onChangeStatus = (newStatus: DataNodeStatus) => {
+    changeNodeStatusOperation(node, newStatus, storeContext);
   };
   return (
     <div className="card is-fullwidth">
@@ -32,24 +36,11 @@ export default function TopicItem({ topic }: TopicItemProps) {
           onClick={() => setIsExpanded(!expanded)}
         >
           <span className="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
-              />
-            </svg>
+            <NodeIcon kind={node.kind} />
           </span>
           <span className="has-text-weight-semibold ml-2">
-            #{topic.sequence} {topic.title} (
-            <TopicStatusText status={topic.status} />)
+            #{node.sequence} {node.title} (
+            <NodeStatusText status={node.status} />)
           </span>
         </a>
         <a className="card-header-icon card-toggle">
@@ -92,27 +83,26 @@ export default function TopicItem({ topic }: TopicItemProps) {
         </a>
       </header>
       <div className={`card-content ${!expanded ? "is-hidden" : ""}`}>
-        <p>Description: {topic.description}</p>
+        <p>Description: {node.description}</p>
         <hr />
         <p>
-          Crée le: {moment(topic.createdAt).locale("fr").calendar()}
+          Crée le: {moment(node.createdAt).locale("fr").calendar()}
           <br />
-          Dernière mise à jour:{" "}
-          {moment(topic.createdAt).locale("fr").calendar()}
+          Dernière mise à jour: {moment(node.createdAt).locale("fr").calendar()}
         </p>
         <hr />
         <div className="is-fullwidth has-text-centered is-size-4 mt-2 mb-2">
           Eléments associés
         </div>
-
+        {/* 
         {topic.elements.map((item) => (
           <LinkToElement sequence={item} key={`#${item}`} />
-        ))}
+        ))} */}
       </div>
       <footer className={`card-footer ${!expanded ? "is-hidden" : ""}`}>
-        {topic.status !== "COMPLETED" && (
+        {node.status !== "COMPLETED" && (
           <>
-            {topic.status === "ACTIVE" && (
+            {node.status === "ACTIVE" && (
               <a
                 className="card-footer-item"
                 onClick={() => {
@@ -122,7 +112,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
                 Suspendre
               </a>
             )}
-            {topic.status === "PENDING" && (
+            {node.status === "PENDING" && (
               <a
                 className="card-footer-item"
                 onClick={() => {
@@ -142,7 +132,7 @@ export default function TopicItem({ topic }: TopicItemProps) {
             </a>
           </>
         )}
-        {topic.status === "COMPLETED" && (
+        {node.status === "COMPLETED" && (
           <>
             <a
               className="card-footer-item"

@@ -1,52 +1,43 @@
 import React from "react";
 
 import ForceGraph2D from "react-force-graph-2d";
-import { IElement } from "../../../contexts/datastore/types/IElement";
-import { ITopic } from "../../../contexts/datastore/types/ITopic";
+
 import { IMapNode } from "../types/IMapNode";
 import { IMapLink } from "../types/IMapLink";
 import { KindContext } from "../../../contexts/kinds";
+import { IDataNode } from "../../../contexts/datastore/types/IDataNode";
 interface StoreMapProps {
-  elements: IElement[];
-
-  topics: ITopic[];
+  data: IDataNode[];
 }
 
-export default function StoreMap({ elements, topics }: StoreMapProps) {
+export default function StoreMap({ data }: StoreMapProps) {
   const [nodes, setNodes] = React.useState<IMapNode[]>([]);
   const [links, setLinks] = React.useState<IMapLink[]>([]);
   const { setCurrent, setData } = React.useContext(KindContext);
   React.useEffect(() => {
     const links: IMapLink[] = [];
-    const topicNodes = topics.map((item) => {
+
+    const elementNodes = data.map((item) => {
       const result: IMapNode = {
-        id: "T" + item.sequence,
         sequence: item.sequence,
         label: item.title,
-        group: 0,
-        view: "topics",
+        group: item.parent,
+        view: "nodes",
       };
-      return result;
-    });
-    const elementNodes = elements.map((item) => {
-      const result: IMapNode = {
-        id: "E" + item.sequence,
-        sequence: item.sequence,
-        label: item.title,
-        group: item.topic,
-        view: "elements",
-      };
-      links.push({
-        source: "T" + item.topic,
-        target: "E" + item.sequence,
-        value: "contains",
-      });
+      if (item.parent) {
+        links.push({
+          source: item.parent,
+          target: item.sequence,
+          value: "child",
+        });
+      }
+
       return result;
     });
 
-    setNodes([...topicNodes, ...elementNodes]);
+    setNodes(elementNodes);
     setLinks(links);
-  }, [elements, topics]);
+  }, [data]);
   const onNodeSelected = (node: IMapNode) => {
     setData(node.sequence);
     setCurrent(node.view);

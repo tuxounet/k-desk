@@ -1,11 +1,16 @@
 import React from "react";
-import createTopicOperation from "../operations/createTopic";
-import { ITopic } from "../../../contexts/datastore/types/ITopic";
+
 import { DataStoreContext } from "../../../contexts/datastore";
 import { FileContext } from "../../../contexts/file";
-export default function TopicsCreate() {
+import {
+  DataNodeKindTypes,
+  IDataNode,
+} from "../../../contexts/datastore/types/IDataNode";
+import createNodeOperation from "../operations/createNode";
+export default function NodeCreate() {
   const [error, setError] = React.useState<string>();
   const [isActive, setIsActive] = React.useState(false);
+  const [kind, setKind] = React.useState<DataNodeKindTypes>("group");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
 
@@ -24,16 +29,16 @@ export default function TopicsCreate() {
 
   const onSave = () => {
     setError(undefined);
-    const newTopic: ITopic = {
-      sequence: storeContext.store.topics.lastSequence + 1,
+    const newNode: IDataNode = {
+      sequence: storeContext.store.nodes.lastSequence + 1,
       createdAt: new Date(),
       updatedAt: new Date(),
       status: "ACTIVE",
       title,
       description,
-      elements: [],
+      kind,
     };
-    createTopicOperation(newTopic, storeContext)
+    createNodeOperation(newNode, storeContext)
       .then(() => {
         closeModal();
       })
@@ -69,7 +74,7 @@ export default function TopicsCreate() {
                   />
                 </svg>
               </i>
-              <span>Nouveau sujet</span>
+              <span>Nouvel élément</span>
             </button>
           </div>
           <div
@@ -79,7 +84,7 @@ export default function TopicsCreate() {
             <div className="modal-background"></div>
             <div className="modal-card">
               <header className="modal-card-head">
-                <p className="modal-card-title">Nouveau sujet</p>
+                <p className="modal-card-title">Nouvel élément</p>
                 <button
                   className="delete"
                   aria-label="close"
@@ -94,6 +99,21 @@ export default function TopicsCreate() {
                 }}
               >
                 <section className="modal-card-body">
+                  <div className="field">
+                    <label className="label">Type</label>
+                    <div className="control">
+                      <div className="select">
+                        <select
+                          className="select"
+                          value={kind}
+                          onChange={(e) => setKind(e.target.value as any)}
+                        >
+                          <option value="group">Groupe</option>
+                          <option value="element">Elément</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   <div className="field">
                     <label className="label">Titre</label>
                     <div className="control">

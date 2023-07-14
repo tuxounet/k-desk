@@ -1,10 +1,10 @@
-import { TopicStatus } from "../../../contexts/datastore/types/ITopic";
+import { DataNodeStatus } from "../../../contexts/datastore/types/IDataNode";
 
-interface TopicStatusTextProps {
-  status?: TopicStatus;
+interface NodeStatusTextProps {
+  status?: DataNodeStatus;
 }
 
-export default function TopicStatusText(props: TopicStatusTextProps) {
+export default function NodeStatusText(props: NodeStatusTextProps) {
   if (!props.status) return <>Tous</>;
   switch (props.status) {
     case "ACTIVE":

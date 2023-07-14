@@ -1,5 +1,5 @@
 export interface IMapLink {
-  source: string;
-  target: string;
+  source: number;
+  target: number;
   value: string;
 }

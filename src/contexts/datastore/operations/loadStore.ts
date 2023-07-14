@@ -9,18 +9,20 @@ export default async function loadStoreOperation(
   const body = await file.text();
   const store = await parseFileOperation(body);
 
-  const inboxTopic = store.topics.items.find((item) => item.title === "inbox");
+  const inboxTopic = store.nodes.items.find(
+    (item) => item.kind === "group" && item.title === "inbox"
+  );
   if (!inboxTopic) {
-    store.topics.items.push({
-      sequence: store.topics.lastSequence + 1,
+    store.nodes.items.push({
+      sequence: store.nodes.lastSequence + 1,
       title: "inbox",
       createdAt: new Date(),
       updatedAt: new Date(),
       description: "",
-      elements: [],
+      kind: "group",
       status: "ACTIVE",
     });
-    store.topics.lastSequence = store.topics.lastSequence + 1;
+    store.nodes.lastSequence = store.nodes.lastSequence + 1;
 
     const newBody = await serializeFileOperation(store);
     // create a FileSystemWritableFileStream to write to
