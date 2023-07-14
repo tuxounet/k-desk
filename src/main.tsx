@@ -11,7 +11,7 @@ import DataStoreContextProvider from "./contexts/datastore/index.tsx";
 import ServiceWorkerContextProvider from "./contexts/serviceworker/index.tsx";
 import KindContextProvider from "./contexts/kinds/index.tsx";
 import moment from "moment";
-import "moment/locale/fr";
+import "moment/dist/locale/fr";
 moment.locale("fr")
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

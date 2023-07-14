@@ -11,6 +11,7 @@ export default async function createNodeOperation(
     ...storeContext.store,
   };
 
+  newNode.sequence = newStore.nodes.lastSequence + 1;
   newStore.nodes.items.push(newNode);
   newStore.nodes.lastSequence = newNode.sequence;
   newStore.events.items.push({

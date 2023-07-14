@@ -5,9 +5,9 @@ import {
   DataNodeStatus,
   IDataNode,
 } from "../../../contexts/datastore/types/IDataNode";
-import NodeCreate from "../components/NodeCreate";
+import NodeCreate from "./NodeCreate";
 import NodeStats from "../components/NodeStats";
-import NodeList from "../components/NodeList";
+import NodeListItem from "../components/NodeListItem";
 
 export default function NodeListView() {
   const { store } = React.useContext(DataStoreContext);
@@ -38,7 +38,7 @@ export default function NodeListView() {
 
   return (
     <>
-      <p className="panel-heading">Sujets</p>
+      <p className="panel-heading">Eléments</p>
       <NodeCreate />
       <NodeStats nodes={store.nodes.items} />
       <p className="panel-tabs">
@@ -95,7 +95,10 @@ export default function NodeListView() {
           </i>
         </p>
       </div>
-      <NodeList nodes={nodes} />
+
+      {nodes.map((item) => (
+        <NodeListItem node={item} key={item.sequence} />
+      ))}
     </>
   );
 }
